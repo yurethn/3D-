@@ -33,6 +33,17 @@ aside{background:#17262e;padding:26px 20px}aside.left{border-right:1px solid #31
 footer{height:38px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #31434c;padding:0 27px;font-size:10px;color:#8ca4a9}
 @media(max-width:1150px){main{grid-template-columns:245px minmax(340px,1fr)}aside.right{grid-column:1/-1;border-top:1px solid #31434c;border-left:none;display:block}aside.right .trainers{max-width:500px}.scene-wrap{height:560px}}
 @media(max-width:680px){header{padding:0 15px}.header-right{font-size:0}main{display:block}aside.left{border-right:0;border-bottom:1px solid #31434c}.center{padding:16px 11px}.scene-wrap{height:430px}.bubble{top:26%;right:10%;font-size:10px}.stage-heading small{display:none}footer{padding:0 12px}footer span:last-child{display:none}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.mechanics{margin-top:14px;background:#142b31;border:1px solid #527768;border-radius:12px;overflow:hidden}
+.mech-head{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:15px 16px 10px}.mech-head strong{font-size:13px;color:#e9fff0}.mech-head small{font-size:9px;color:#a2d5ba;letter-spacing:1px}
+.mech-steps{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;padding:4px 11px 12px}
+.mech-tab{background:#263e3e;border:1px solid #456063;color:#b4cccc;border-radius:7px;padding:8px 3px;font-size:9px;min-height:50px;line-height:1.3;word-break:keep-all}.mech-tab b{display:block;font-size:12px;color:#8fe9b8;margin-bottom:4px}.mech-tab.active{background:#2c644e;color:#fff;border-color:#a2f6bf}
+.mech-detail{background:#203b3d;border-top:1px solid #527368;padding:16px}.mech-detail h3{font-size:15px;margin:0}.mech-detail p{font-size:11px;color:#d0e5dd;line-height:1.8;margin:10px 0}
+.mech-calc{white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.8 ui-monospace,Menlo,Consolas,monospace;background:#0e252a;border:1px solid #3f6b60;border-radius:9px;color:#b4f3ce;padding:12px;margin:10px 0;min-height:50px}
+.mech-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px}.mech-bottom span{font-size:10px;color:#9abfb6;line-height:1.5}.mech-bottom button{border:1px solid #71bd95;background:#33684d;color:#ecfff4;border-radius:8px;padding:10px 12px;font-size:11px;font-weight:800}
+.teacher-box{background:#1f3a34;border:1px solid #527862;border-radius:9px;margin-top:11px;padding:12px}.teacher-box strong{font-size:11px;color:#b6f1c9}.teacher-box p{font-size:10px;line-height:1.75;color:#a7cbb7;margin:7px 0}.teacher-box details{margin-top:12px;color:#add8bb;font-size:10px;line-height:1.75}.teacher-box summary{cursor:pointer;color:#a9f3c7;font-weight:800}
+.teacher-box input{background:#172d2b}
+@media(max-width:680px){.mech-steps{grid-template-columns:repeat(4,minmax(0,1fr))}.mech-bottom{align-items:flex-start}.mech-detail{padding:13px}}
 </style>
 </head><body>
 <header><div class="logo"><div class="logo-icon">✦</div><div><strong>FLYFORMER <em>LAB</em></strong><small>THE TRANSFORMER CLASSROOM</small></div></div><div class="header-right"><span class="dot"></span>LIVE 3D SIMULATION&nbsp; · &nbsp; v1.0</div></header>
@@ -42,8 +53,14 @@ footer{height:38px;display:flex;align-items:center;justify-content:space-between
 <div class="section">학습 방식 <span>MODEL MODE</span></div>
 <div class="modes"><button id="gpt" class="mode active"><span class="symbol">↗</span><b>GPT</b><small>다음 단어 예측</small></button><button id="bert" class="mode"><span class="symbol">↔</span><b>BERT</b><small>빈칸 단어 복원</small></button></div>
 <div class="section">칠판 문제 <span>QUESTION</span></div><div class="question-card"><div class="question-id" id="qid">QUESTION 01 / 12</div><div class="question-preview" id="qpreview">오늘 급식은 정말 ____</div><div class="tag" id="qtag">앞 문맥을 보고 예측</div></div><button class="btn full" id="next">↻ &nbsp;다른 문제 출제</button>
-<div class="section">직접 문제 내기 <span>OPTIONAL</span></div><label class="field" for="custom">문장 입력</label><input id="custom" maxlength="100" placeholder="예: 내일 날씨는 정말"><p class="field-help" id="input-help">GPT는 문장 뒤에 나올 단어를 예측해요.</p>
-<div class="actions"><button id="custom-btn" class="btn">칠판에 쓰기</button><button id="clear" class="link">예시로 돌아가기</button></div>
+<div class="section">직접 문제 내기 <span>BE THE TEACHER</span></div>
+<label class="field" for="custom">① 문제 문장</label><input id="custom" maxlength="100" placeholder="예: 내일 날씨는 정말">
+<p class="field-help" id="input-help">GPT는 문장 뒤에 나올 단어를 예측해요.</p>
+<div class="teacher-box"><strong>② 정답 단어 등록 (선생님용)</strong>
+<p>초파리는 처음부터 답을 알지 못합니다. 네가 입력한 정답은 <b>채점과 실제 학습</b>에만 사용해요. 예측할 때는 정답인지 알려주지 않습니다.</p>
+<label class="field" for="custom-answer">정답은?</label><input id="custom-answer" maxlength="32" placeholder="예: 좋겠다" autocomplete="off">
+<details><summary>초파리는 내 문장의 정답을 어떻게 알아?</summary><p>처음엔 몰라요. 문장을 숫자로 변환하고 세 후보 중 가장 확률이 높은 단어를 선택합니다. 정답을 포함한 후보 목록은 제공하지만 어느 단어가 정답인지는 가르쳐주기 전엔 모릅니다. 학습 버튼을 누르면 정답과 출력 확률을 비교해 가중치를 실제로 수정합니다. 이는 모든 한국어 단어를 이해하는 GPT가 아니라 교육용 3지선다 분류기예요.</p></details></div>
+<div class="actions"><button id="custom-btn" class="btn">칠판에 출제하기</button><button id="clear" class="link">예시로 돌아가기</button></div>
 <div class="fine-print">ⓘ <b>교육용 소형 어텐션 모델입니다.</b> 실제 GPT·BERT 전체를 구현한 것이 아니며, 고정 Q/K/V와 학습 가능한 출력층을 이용해 원리를 체험합니다.</div>
 </aside>
 <div class="center">
@@ -51,13 +68,28 @@ footer{height:38px;display:flex;align-items:center;justify-content:space-between
 <div class="scene-wrap"><div id="scene"></div><div class="chip"><span class="dot"></span>LIVE CLASSROOM &nbsp; ● &nbsp; 3 PUPILS</div><button id="camera-reset" class="camera">⌖ 기본 시점</button><div class="bubble" id="bubble">선생님, 문제 주세요!</div>
 <div class="overlay"><div class="overlay-line"><span>CHALKBOARD QUESTION</span><span id="mode-label">GPT · CAUSAL</span></div><div class="board-question" id="board-text"></div></div></div>
 <div class="attention"><div class="attention-heading"><strong>▏ SELF-ATTENTION</strong><small id="attn-mode">앞에 나온 단어만 참고</small></div><div class="tokens" id="tokens"><span class="placeholder">문제를 풀면 각 단어를 얼마나 참고했는지 표시됩니다.</span></div><div class="attention-footer"><span>진한 색 = 높은 어텐션 가중치</span><span>Q × K → Softmax → V</span></div></div>
+<section class="mechanics">
+<div class="mech-head"><strong>🧠 초파리가 답을 계산하는 7단계</strong><small>HOW AI THINKS / LIVE NUMBERS</small></div>
+<div class="mech-steps">
+<button class="mech-tab active" data-mstep="0"><b>01</b>토큰화</button>
+<button class="mech-tab" data-mstep="1"><b>02</b>임베딩</button>
+<button class="mech-tab" data-mstep="2"><b>03</b>Q·K·V</button>
+<button class="mech-tab" data-mstep="3"><b>04</b>어텐션</button>
+<button class="mech-tab" data-mstep="4"><b>05</b>문맥</button>
+<button class="mech-tab" data-mstep="5"><b>06</b>확률</button>
+<button class="mech-tab" data-mstep="6"><b>07</b>학습</button>
+</div>
+<div class="mech-detail"><h3 id="mech-title">① 글자를 토큰으로 나누기</h3><p id="mech-help">단계 버튼을 눌러 계산 과정을 자세히 보세요.</p>
+<pre class="mech-calc" id="mech-values">초파리에게 먼저 문제를 풀게 해주세요.</pre>
+<div class="mech-bottom"><span id="mech-note">현재 모델의 계산된 값만 표시합니다.</span><button id="mech-next">다음 계산 →</button></div></div>
+</section>
 </div>
 <aside class="right"><div class="section" style="margin-top:0">초파리의 풀이 <span>INFERENCE</span></div>
 <div class="fly-row"><div class="fly-avatar">🪰</div><div><div class="fly-name">초파리 No. 01</div><div class="fly-state" id="state">대기 중 · 준비 완료</div></div></div>
 <div class="answer"><div class="answer-title"><span>선택한 답</span><span class="badge" id="badge">READY</span></div><div id="answer" class="answer-word">아직 답하지 않았어요</div><div id="explain" class="answer-hint">예측 버튼을 눌러 주세요.</div></div><button id="predict" class="btn full primary">▶ &nbsp;초파리, 문제 풀어!</button>
 <div class="section">후보 단어 확률 <span>SOFTMAX</span></div><div id="probs"><div class="prob-placeholder">예측하면 실제 확률을 보여 드려요.</div></div><p class="prob-note">비율은 제시한 세 후보 안에서 정규화한 모델 출력입니다.</p>
 <div class="section">초파리 학습 <span>TRAINING</span></div><div class="trainers"><button data-train="1">+1회</button><button data-train="10">+10회</button><button data-train="100">+100회</button><button data-train="1000">+1000회</button></div>
-<div class="stats"><div class="stat"><small>학습 스텝</small><b id="steps">0</b></div><div class="stat"><small>학습 세트 정확도</small><b id="accuracy">—</b></div></div>
+<div class="stats"><div class="stat"><small>학습 스텝</small><b id="steps">0</b></div><div class="stat"><small>등록된 문제 정확도</small><b id="accuracy">—</b></div></div>
 <div class="chart"><svg viewBox="0 0 260 66" preserveAspectRatio="none"><path d="M0 59 H260" stroke="#416258" stroke-dasharray="3 4" fill="none"/><polyline id="chart-line" fill="none" stroke="#88edbc" stroke-width="2.5" points=""/></svg><div class="chart-footer"><span>정확도 변화</span><span id="chart-label">학습 전</span></div></div>
 <button class="link" id="reset" style="margin-top:11px">↺ 모델 초기화</button>
 <div class="info"><b>WHY THIS MATTERS</b><p id="mode-explain">GPT는 다음 단어를 예측할 때 이전 토큰만 볼 수 있습니다. 초파리는 이를 간단한 어텐션 모형으로 연습합니다.</p><small>브라우저 내 실제 계산 · 학습용 장난감 모델</small></div>
@@ -105,28 +137,86 @@ function extract(sentence,mode){let words=sentence.trim().split(/\s+/).filter(Bo
  let input=vec(all[i]).map((x,d)=>x+.07*Math.sin((i+1)/(10000**(2*d/dim))));names.push(all[i]);scores.push(dot(q,mul(proj[1],input))/Math.sqrt(dim));vals.push(mul(proj[2],input));base.push(input)}
  let weights=sm(scores),f=new Float64Array(dim*2);
  for(let i=0;i<names.length;i++)for(let d=0;d<dim;d++){f[d]+=weights[i]*vals[i][d];f[d+dim]+=base[i][d]/Math.max(1,names.length)}
- return {f,attention:names.map((word,i)=>({word,weight:weights[i]}))}}
+ return {f,words:all,query:target,q,attention:names.map((word,i)=>({word,weight:weights[i],score:scores[i],key:mul(proj[1],base[i]),value:vals[i]})),context:Array.from(f).slice(0,dim)}}
 class Student{
  constructor(mode){this.mode=mode;this.n=0;this.w={};this.b={};this.r=random(mode==='gpt'?103:309);this.history=[]}
  ensure(word){if(!this.w[word]){this.w[word]=Float64Array.from({length:dim*2},()=> (this.r()-.5)*.04);this.b[word]=0}return this.w[word]}
- calc(p){let feat=extract(p[0],this.mode),scores=p[2].map(word=>dot(this.ensure(word),feat.f)+this.b[word]),prob=sm(scores),rank=p[2].map((word,i)=>({word,p:prob[i]})).sort((a,b)=>b.p-a.p);return {...feat,rank,winner:rank[0].word}}
- accuracy(){let questions=sets[this.mode];return questions.filter(p=>this.calc(p).winner===p[1]).length/questions.length}
- train(n){const q=sets[this.mode];for(let i=0;i<n;i++){let p=q[Math.floor(this.r()*q.length)],f=extract(p[0],this.mode).f,score=p[2].map(w=>dot(this.ensure(w),f)+this.b[w]),prob=sm(score),lr=.14/(1+this.n/2000);
+ calc(p){let feat=extract(p[0],this.mode),scores=p[2].map(word=>dot(this.ensure(word),feat.f)+this.b[word]),prob=sm(scores),rank=p[2].map((word,i)=>({word,p:prob[i]})).sort((a,b)=>b.p-a.p);return {...feat,rank,winner:rank[0].word,logits:p[2].map((word,i)=>({word,score:scores[i],prob:prob[i]}))}}
+ accuracy(){let questions=[...sets[this.mode],...customLessons[this.mode]];return questions.filter(p=>this.calc(p).winner===p[1]).length/questions.length}
+ train(n){const q=[...sets[this.mode],...customLessons[this.mode]];for(let i=0;i<n;i++){let focus=customLessons[this.mode],source=focus.length&&this.r()<.6?focus:q,p=source[Math.floor(this.r()*source.length)],f=extract(p[0],this.mode).f,score=p[2].map(w=>dot(this.ensure(w),f)+this.b[w]),prob=sm(score),lr=.14/(1+this.n/2000);
+ const pCorrect=prob[p[2].indexOf(p[1])];this.lastTrain={sentence:p[0],correct:p[1],pCorrect,loss:-Math.log(Math.max(pCorrect,1e-12)),gradient:pCorrect-1,lr};
  p[2].forEach((word,j)=>{let g=lr*(prob[j]-(word===p[1]?1:0)),w=this.ensure(word);for(let k=0;k<w.length;k++)w[k]-=g*f[k];this.b[word]-=g});this.n++;
  if(i===n-1||i%Math.max(1,Math.floor(n/15))===0)this.history.push(this.accuracy())}
  this.history=this.history.slice(-65)}}
-let mode='gpt',idx=0,own=null,playing=false,mood=0;const models={gpt:new Student('gpt'),bert:new Student('bert')};
+let mode='gpt',idx=0,own=null,playing=false,mood=0,mechStep=0,mechResult=null;const customLessons={gpt:[],bert:[]};const models={gpt:new Student('gpt'),bert:new Student('bert')};
 function pnow(){return own||sets[mode][idx]}
 function sentence(p){return mode==='gpt'?p[0]+' ____':p[0].replace('[MASK]','_____')}
-function sync(){let p=pnow();el('qid').textContent=own?'USER QUESTION':'QUESTION '+String(idx+1).padStart(2,'0')+' / '+sets[mode].length;el('qpreview').textContent=sentence(p);el('board-text').textContent=sentence(p);el('qtag').textContent=mode==='gpt'?'앞 문맥을 보고 예측':'가려진 단어 복원';el('mode-label').textContent=mode==='gpt'?'GPT · CAUSAL':'BERT · BIDIRECTIONAL';el('attn-mode').textContent=mode==='gpt'?'이전 토큰만 참고':'앞뒤 토큰을 함께 참고';el('state').textContent='대기 중 · 준비 완료';el('badge').textContent='READY';el('answer').textContent='아직 답하지 않았어요';el('explain').textContent='예측 버튼을 눌러 주세요.';el('probs').innerHTML='<div class="prob-placeholder">예측하면 실제 확률을 보여 드려요.</div>';el('tokens').innerHTML='<span class="placeholder">문제를 풀면 각 단어를 얼마나 참고했는지 표시됩니다.</span>';el('bubble').textContent='선생님, 문제 주세요!';paintBoard(p);stats()}
+function sync(){let p=pnow();el('qid').textContent=own?'USER QUESTION':'QUESTION '+String(idx+1).padStart(2,'0')+' / '+sets[mode].length;el('qpreview').textContent=sentence(p);el('board-text').textContent=sentence(p);el('qtag').textContent=mode==='gpt'?'앞 문맥을 보고 예측':'가려진 단어 복원';el('mode-label').textContent=mode==='gpt'?'GPT · CAUSAL':'BERT · BIDIRECTIONAL';el('attn-mode').textContent=mode==='gpt'?'이전 토큰만 참고':'앞뒤 토큰을 함께 참고';el('state').textContent='대기 중 · 준비 완료';el('badge').textContent='READY';el('answer').textContent='아직 답하지 않았어요';el('explain').textContent='예측 버튼을 눌러 주세요.';el('probs').innerHTML='<div class="prob-placeholder">예측하면 실제 확률을 보여 드려요.</div>';el('tokens').innerHTML='<span class="placeholder">문제를 풀면 각 단어를 얼마나 참고했는지 표시됩니다.</span>';el('bubble').textContent='선생님, 문제 주세요!';paintBoard(p);stats();mechResult=null;mechStep=0;showMechanism()}
 function stats(){const m=models[mode];el('steps').textContent=m.n.toLocaleString('ko-KR');el('accuracy').textContent=Math.round(m.accuracy()*100)+'%';const h=m.history;el('chart-line').setAttribute('points',h.map((v,i)=>(h.length===1?0:i*260/(h.length-1)).toFixed(2)+','+(59-v*54).toFixed(2)).join(' '));el('chart-label').textContent=m.n+'회 학습'}
 function switchMode(m){if(playing)return;mode=m;idx=0;own=null;el('gpt').classList.toggle('active',m==='gpt');el('bert').classList.toggle('active',m==='bert');el('input-help').textContent=m==='gpt'?'GPT는 문장 뒤에 나올 단어를 예측해요.':'BERT는 문장 안에 [MASK]를 포함해 주세요.';el('mode-explain').textContent=m==='gpt'?'GPT는 앞의 문맥만 참조해 다음 단어를 예측합니다. 입력 뒤쪽의 토큰은 참조할 수 없습니다.':'BERT는 [MASK]의 앞뒤 문맥을 동시에 참조합니다. 초파리가 주목한 가중치는 실제 어텐션 수치입니다.';el('custom').value='';sync()}
 function display(out){el('tokens').innerHTML='';out.attention.forEach(t=>{let node=document.createElement('div');node.className='token';node.style.background='rgba(76,194,135,'+(.14+t.weight*.58)+')';let name=document.createElement('b');name.textContent=t.word;let per=document.createElement('small');per.textContent=(t.weight*100).toFixed(1)+'%';node.append(name,per);el('tokens').append(node)});el('probs').innerHTML='';out.rank.forEach(row=>{let div=document.createElement('div');div.className='prob-row';let m=document.createElement('div');m.className='prob-meta';let n=document.createElement('span');n.textContent=row.word;let v=document.createElement('span');v.textContent=(row.p*100).toFixed(1)+'%';m.append(n,v);let track=document.createElement('div');track.className='track';let f=document.createElement('div');f.className='fill';f.style.width=(row.p*100)+'%';track.appendChild(f);div.append(m,track);el('probs').append(div)})}
-function solve(){if(playing)return;playing=true;el('predict').disabled=true;el('state').textContent='Q / K / V 계산 중…';el('bubble').textContent='어텐션 계산 중…';mood=1;setTimeout(()=>{let p=pnow(),r=models[mode].calc(p),right=p[1]===null?null:r.winner===p[1];el('answer').textContent=r.winner;el('badge').textContent=right===null?'PREDICTED':right?'CORRECT':'TRY AGAIN';el('explain').textContent=right===null?'직접 입력: 정답 레이블이 없어서 채점하지 않습니다.':right?'정 확 한 입니다! 정답을 골랐어요.':'오차범위 지로? 정답: '+p[1];el('bubble').textContent=right===null?'제 예측은 '+r.winner+'!':right?'정 확 한 입니다!':'다시 공부할게요!';el('state').textContent='예측 완료';mood=right===false?3:2;display(r);el('predict').disabled=false;playing=false;setTimeout(()=>mood=0,1500)},520)}
+
+const stages=[
+ ['① 문장을 토큰으로 쪼개기','입력 문장을 단어로 나눕니다. 실제 GPT/BERT는 복잡한 부분 단어 토크나이저를 쓰지만 여기서는 띄어쓰기만 사용합니다.'],
+ ['② 토큰을 숫자 벡터로','컴퓨터는 문자열 대신 숫자로 계산해요. 이 교육용 모델은 각 단어를 고정된 해시 기반 12차원 벡터로 바꿉니다. 실제 언어 의미를 사전학습한 벡터는 아닙니다.'],
+ ['③ Q(질문), K(열쇠), V(내용)','예측할 자리의 Q와 다른 단어들의 K를 비교하고, V에서 가져올 정보를 결정합니다. Q/K/V 변환 행렬은 고정되어 있습니다.'],
+ ['④ 점수를 어텐션 확률로','s=Q·K/√12를 구하고 Softmax로 가중치로 변환합니다. GPT는 미래 토큰을 볼 수 없고 BERT는 빈칸의 앞뒤를 함께 봅니다.'],
+ ['⑤ 정보를 가중 평균하기','각 V 벡터에 어텐션 가중치를 곱해 더한 문맥 벡터를 만듭니다. 입력 벡터 평균을 결합해 24차원 출력층에 전달합니다.'],
+ ['⑥ 점수에서 단어 선택하기','출력층의 W·h+b로 세 후보의 점수를 만들고 Softmax로 확률을 구합니다. 정답 레이블은 예측에 전달되지 않습니다.'],
+ ['⑦ 오답을 보고 실제 학습하기','정답의 확률로 교차엔트로피 손실을 계산합니다. SGD로 출력층 W와 b만 수정하고 고정 Q/K/V는 변경하지 않습니다.']
+];
+const fnum=(v,n=4)=>Number(v).toFixed(n);
+const sample=v=>Array.from(v).slice(0,5).map(x=>fnum(x,3)).join(', ')+' …';
+function showMechanism(){
+ const stage=stages[mechStep],r=mechResult,m=models[mode];el('mech-title').textContent=stage[0];el('mech-help').textContent=stage[1];
+ document.querySelectorAll('[data-mstep]').forEach(b=>{b.classList.toggle('active',Number(b.dataset.mstep)===mechStep);b.setAttribute('aria-pressed',String(Number(b.dataset.mstep)===mechStep))});
+ let rows=[],note='오른쪽 예측 버튼을 누르면 이 문제의 실제 계산값을 표시합니다.';
+ if(mechStep===6){
+  if(!m.lastTrain)rows=['아직 학습 전입니다.','+10회 또는 +100회 버튼을 누르세요.'];
+  else {const a=m.lastTrain;rows=['학습 문장: '+a.sentence,'정답: '+a.correct,'업데이트 이전 정답 확률 = '+fnum(a.pCorrect*100,2)+'%','교차엔트로피 L = −ln(p정답) = '+fnum(a.loss),'정답 편향 기울기 = p정답 − 1 = '+fnum(a.gradient),'학습률 η = '+fnum(a.lr,5),'갱신: W ← W − η × ∇L'];note='방금 학습한 예제의 실제 수치입니다. 정답 레이블은 오직 학습과 채점에 이용합니다.'}
+ } else if(!r)rows=['아직 이 문제를 예측하지 않았어요.','[초파리, 문제 풀어!] 버튼을 눌러 주세요.'];
+ else if(mechStep===0){rows=['입력: '+pnow()[0],'단어 목록: '+r.words.map((w,i)=>'['+i+'] '+w).join('  '),'예측 쿼리: '+r.words[r.query]];note=mode==='gpt'?'GPT는 [NEXT] 위치에서 앞 단어만 참조합니다.':'BERT는 [MASK] 위치에서 양방향 문맥을 참조합니다.'}
+ else if(mechStep===1){rows=r.words.slice(0,6).map(w=>w+' → ['+sample(vec(w))+']');note='실제 단어 벡터 12개 값 가운데 앞의 5개만 표시합니다.'}
+ else if(mechStep===2){rows=['Q('+r.words[r.query]+')=['+sample(r.q)+']',...r.attention.slice(0,4).map(t=>'K('+t.word+')=['+sample(t.key)+']'),...(r.attention[0]?['V('+r.attention[0].word+')=['+sample(r.attention[0].value)+']']:[])];note='표시값은 현재 입력의 선형 변환으로 실제 계산했습니다.'}
+ else if(mechStep===3){rows=r.attention.map(t=>t.word+': s='+fnum(t.score)+' → '+fnum(t.weight*100,2)+'%');rows.push('가중치 합계 = '+fnum(r.attention.reduce((a,t)=>a+t.weight,0)*100,2)+'%');note='sᵢ = Q·Kᵢ / √12,   αᵢ = exp(sᵢ) / Σexp(sⱼ)'}
+ else if(mechStep===4){rows=['Context = Σ αᵢVᵢ','문맥 벡터 = ['+sample(r.context)+']','출력 입력 = 문맥 12차원 + 단어 평균 12차원','최종 24차원 벡터 = ['+sample(r.f)+']'];note='가중치로 정보를 더해 만든 벡터입니다.'}
+ else if(mechStep===5){rows=r.logits.map(t=>t.word+': '+fnum(t.score)+' → '+fnum(t.prob*100,2)+'%');rows.push('최대 확률 단어 = '+r.winner);note='정답 레이블이 아니라 이 점수와 확률로만 선택했습니다.'}
+ el('mech-values').textContent=rows.join('\n');el('mech-note').textContent=note;el('mech-next').textContent=mechStep===6?'처음 단계 ↺':'다음 계산 →'
+}
+document.querySelectorAll('[data-mstep]').forEach(b=>b.onclick=()=>{mechStep=Number(b.dataset.mstep);showMechanism()});
+el('mech-next').onclick=()=>{mechStep=(mechStep+1)%7;showMechanism()};
+
+function solve(){if(playing)return;playing=true;el('predict').disabled=true;el('state').textContent='Q / K / V 계산 중…';el('bubble').textContent='어텐션 계산 중…';mood=1;setTimeout(()=>{let p=pnow(),r=models[mode].calc(p),right=p[1]===null?null:r.winner===p[1];el('answer').textContent=r.winner;el('badge').textContent=right===null?'PREDICTED':right?'CORRECT':'TRY AGAIN';el('explain').textContent=right===null?'직접 입력: 정답 레이블이 없어서 채점하지 않습니다.':right?'정 확 한 입니다! 정답을 골랐어요.':'오차범위 지로? 정답: '+p[1];el('bubble').textContent=right===null?'제 예측은 '+r.winner+'!':right?'정 확 한 입니다!':'다시 공부할게요!';el('state').textContent='예측 완료';mood=right===false?3:2;display(r);mechResult=r;mechStep=0;showMechanism();el('predict').disabled=false;playing=false;setTimeout(()=>mood=0,1500)},520)}
 el('gpt').onclick=()=>switchMode('gpt');el('bert').onclick=()=>switchMode('bert');el('next').onclick=()=>{own=null;idx=(idx+1)%sets[mode].length;sync()};el('predict').onclick=solve;
-el('custom-btn').onclick=()=>{let s=el('custom').value.trim();if(!s)return;if(mode==='bert'&&!s.includes('[MASK]')){alert('BERT 모드에서는 [MASK]를 포함해야 합니다.');return}own=[s,null,mode==='gpt'?['맛있다','재미있다','어렵다']:['급식은','수학이','날씨는']];sync()};
-el('custom').onkeydown=e=>{if(e.key==='Enter')el('custom-btn').click()};el('clear').onclick=()=>{own=null;el('custom').value='';sync()};el('reset').onclick=()=>{models[mode]=new Student(mode);sync()};
-document.querySelectorAll('[data-train]').forEach(b=>b.onclick=()=>{if(playing)return;let n=Number(b.dataset.train);models[mode].train(n);stats();el('state').textContent=n+'회 경사하강 학습 완료';el('bubble').textContent='학습 '+n.toLocaleString()+'회 완료!'});
+el('custom-btn').onclick=()=>{
+ const text=el('custom').value.trim(),correct=el('custom-answer').value.trim();
+ if(!text){alert('먼저 문제 문장을 입력해 주세요.');return}
+ if(!correct||/\s/.test(correct)||correct==='[MASK]'){alert('띄어쓰기 없는 정답 단어 하나를 입력해 주세요.');return}
+ if(mode==='bert'&&text.trim().split(/\s+/).filter(w=>w==='[MASK]').length!==1){alert('BERT는 문장 안에 띄어쓰기 된 [MASK]를 정확히 한 번 넣으세요.');return}
+ if(mode==='gpt'&&text.includes('[MASK]')){alert('GPT 모드에서는 [MASK]를 사용하지 않습니다.');return}
+ const distractors=[...new Set(sets[mode].map(p=>p[1]))].filter(w=>w!==correct);
+ const pos=seed(text+correct)%distractors.length;
+ own=[text,correct,[correct,distractors[pos],distractors[(pos+1)%distractors.length]]];
+ const lessons=customLessons[mode],old=lessons.findIndex(p=>p[0]===text);
+ if(old>=0)lessons[old]=own.slice();else lessons.push(own.slice());
+ el('custom-answer').value='';sync();el('bubble').textContent='아직 정답을 몰라요! 학습해 볼까요?'
+};
+el('custom').onkeydown=e=>{if(e.key==='Enter')el('custom-btn').click()};
+el('custom-answer').onkeydown=e=>{if(e.key==='Enter')el('custom-btn').click()};
+el('clear').onclick=()=>{own=null;el('custom').value='';el('custom-answer').value='';sync()};
+el('reset').onclick=()=>{models[mode]=new Student(mode);sync()};
+document.querySelectorAll('[data-train]').forEach(b=>b.onclick=()=>{
+ if(playing)return;
+ let n=Number(b.dataset.train);models[mode].train(n);stats();
+ el('state').textContent=n+'회 실제 경사하강 학습 완료';
+ el('bubble').textContent='학습 완료! 다시 풀어 보세요.';
+ el('badge').textContent='RETRAINED';
+ el('answer').textContent='다시 풀어봐!';
+ el('explain').textContent='가중치가 업데이트됐습니다. 학습 전후 확률을 비교하려면 다시 예측하세요.';
+ el('probs').innerHTML='<div class="prob-placeholder">다시 예측하면 최신 확률이 표시됩니다.</div>';
+ el('tokens').innerHTML='<span class="placeholder">다시 예측하면 최신 어텐션이 표시됩니다.</span>';
+ mechResult=null;mechStep=6;showMechanism()
+});
 // 3D SCHOOL ENVIRONMENT
 const root=el('scene'),scene=new T.Scene();scene.background=new T.Color('#c6d6c9');scene.fog=new T.Fog('#c6d6c9',16,33);
 const camera=new T.PerspectiveCamera(48,1,.1,100),renderer=new T.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.outputColorSpace=T.SRGBColorSpace;renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.45;root.appendChild(renderer.domElement);

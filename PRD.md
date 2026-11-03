@@ -1,3 +1,0 @@
-# FLYFORMER LAB - PRD 3D classroom
-
-Audience: middle and high school audiences. 3D classroom, chalkboard, desk-seated flies, camera navigation, GPT next-word prediction and BERT masked-word classification, QKV attention visualization, live SGD training, direct prompt entry, training accuracy, reset, modern Korean UI. MVP delivers complete browser-based demonstration with clear boundaries on the simplified learning model.
