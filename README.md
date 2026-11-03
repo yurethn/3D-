@@ -1,20 +1,9 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# FLYFORMER LAB 3D
 
-# Run and deploy your AI Studio app
+Educational 3D school classroom with flies sitting at desks and answering a chalkboard prompt. Switch GPT next-token and BERT masked-token modes; view real attention weights and predicted choice probabilities; train an output classifier using SGD. Rotate camera and change problems.
 
-This contains everything you need to run your app locally.
+Implementation: single static HTML file; Three.js ESM 0.180.0 from CDN (network required). WebGL required.
 
-View your app in AI Studio: https://ai.studio/apps/dd67fcee-44d7-473e-b735-c650e5739f38
+Scientific disclosure: the teaching model computes deterministic Q, K and V attention and actually trains its output layer via stochastic gradient descent on 12 examples per mode. It is NOT a pretrained GPT or BERT, and reported accuracy is training-set accuracy. Free-form questions have no ground truth, and only three demonstration candidates are classified.
 
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Deploy: static site, Framework Other, no build command.

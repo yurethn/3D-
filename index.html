@@ -1,13 +1,156 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
-
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FLYFORMER LAB — 3D 초파리 AI 교실</title>
+<meta name="description" content="칠판 문제를 푸는 3D 초파리와 함께 Transformer의 GPT 및 BERT 원리를 체험하세요.">
+<style>
+:root{font-family:Inter,Pretendard,"Noto Sans KR",system-ui,sans-serif;background:#101b22;color:#eff7f2}
+*{box-sizing:border-box}body{margin:0}button,input{font:inherit}button{cursor:pointer}button:hover{filter:brightness(1.13)}button:disabled{opacity:.5}
+header{height:66px;border-bottom:1px solid #31434a;background:#17252d;display:flex;align-items:center;justify-content:space-between;padding:0 27px}
+.logo{display:flex;gap:12px;align-items:center}.logo-icon{width:39px;height:39px;border-radius:11px;display:grid;place-items:center;background:#a6edbe;color:#183e30;font-size:23px}.logo strong{letter-spacing:1.7px;font-size:16px}.logo strong em{color:#a4e1ca;font-style:normal;font-weight:400}.logo small{display:block;font-size:9px;letter-spacing:1.7px;color:#93a7ae;margin-top:3px}
+.header-right{color:#aac2c1;font-size:10px;letter-spacing:1.4px}.dot{display:inline-block;background:#70eeaa;border-radius:50%;height:7px;width:7px;box-shadow:0 0 9px #79f9ae;margin-right:9px}
+main{display:grid;grid-template-columns:270px minmax(420px,1fr) 305px;min-height:calc(100vh - 104px)}
+aside{background:#17262e;padding:26px 20px}aside.left{border-right:1px solid #31434c}aside.right{border-left:1px solid #31434c}
+.eyebrow{font-weight:800;color:#8cd3bb;letter-spacing:2px;font-size:10px}h1{font-size:25px;line-height:1.42;letter-spacing:-1px;margin:15px 0 10px}h1 em{font-style:normal;color:#9be8bd}.lead{font-size:12px;line-height:1.85;color:#98aeb5;margin-bottom:26px}
+.section{display:flex;align-items:center;justify-content:space-between;margin:24px 0 11px;font-size:12px;font-weight:850}.section span{font-size:9px;color:#80999f;letter-spacing:1.2px;font-weight:650}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mode{background:#22343d;border:1px solid #3c4f55;border-radius:10px;padding:13px 10px;color:#b8ced3;text-align:left;min-height:94px;display:flex;flex-direction:column;justify-content:center;gap:4px}.mode b{font-size:17px}.mode small{font-size:10px}.mode.active{border-color:#80ebbb;background:#23443c;color:#e0ffed}.mode .symbol{font-size:20px;color:#8ae6b9}
+.question-card{border:1px solid #395157;background:#20323a;padding:15px;border-radius:10px}.question-id{font-size:9px;letter-spacing:1px;color:#80e6b2;font-weight:800}.question-preview{font-size:14px;font-weight:720;line-height:1.55;margin:13px 0;color:#edf6ef}.tag{display:inline-block;font-size:10px;background:#304e4a;color:#b1e5c9;padding:5px 8px;border-radius:5px}
+.btn{background:#22353e;border:1px solid #3b5960;color:#d3e5e3;border-radius:8px;padding:12px 10px;font-weight:770;font-size:12px}.btn.full{display:block;width:100%;margin-top:9px}.btn.primary{color:#113225;background:#9df0bd;border-color:#9df0bd;padding:14px;font-size:13px}.field{font-size:11px;color:#a2bdc0}.field-help{font-size:10px;line-height:1.65;color:#839ca6}input{width:100%;background:#21333d;border:1px solid #42606a;color:#e9fff2;border-radius:8px;padding:11px;margin-top:8px;outline:0;font-size:12px}input:focus{border-color:#89edc1}.actions{display:flex;gap:8px;align-items:center;margin-top:7px}.actions .btn{flex:1}.link{border:0;background:none;color:#9ce8c3;font-size:10px}.fine-print{margin-top:26px;padding-top:15px;border-top:1px solid #3c4a4e;color:#91aab0;line-height:1.8;font-size:10px}
+.center{min-width:0;padding:21px 18px}.stage-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.stage-heading h2{font-size:20px;margin:6px 0 0}.stage-heading small{font-size:10px;color:#8ca6ab}.room-chip{font-size:10px;font-weight:500;background:#294044;border:1px solid #4b6363;border-radius:5px;margin-left:8px;padding:5px 9px}
+.scene-wrap{height:clamp(400px,59vh,650px);position:relative;background:#b6cdbd;border:1px solid #57736d;border-radius:15px;overflow:hidden}
+#scene{position:absolute;inset:0}#scene canvas{display:block;width:100%;height:100%;touch-action:none}
+.chip{position:absolute;left:15px;top:15px;background:#10262abf;border:1px solid #64847b87;border-radius:7px;padding:9px 11px;font-size:9px;letter-spacing:1.1px;font-weight:850}
+.bubble{position:absolute;top:32%;right:15%;background:#ffffed;color:#2c4b39;padding:10px 14px;border-radius:15px 15px 15px 3px;box-shadow:0 10px 25px #1a383733;font-size:12px;font-weight:780;max-width:190px}
+.camera{position:absolute;top:15px;right:15px;background:#143039bf;color:#e1fff5;border:1px solid #638c8380;border-radius:7px;padding:8px 11px;font-size:10px}
+.overlay{position:absolute;bottom:13px;left:13px;right:13px;padding:12px 15px;background:#11262cdf;backdrop-filter:blur(11px);border:1px solid #6e918177;border-radius:9px}.overlay-line{display:flex;justify-content:space-between;gap:10px;font-size:9px;letter-spacing:1.1px;color:#9ebcb2;font-weight:770}.overlay-line span:last-child{color:#86e5b4}.board-question{font-size:clamp(15px,1.8vw,23px);color:#fff9ea;font-weight:800;margin-top:8px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+.attention{border:1px solid #3c5358;background:#192a32;border-radius:11px;padding:15px 17px;margin-top:13px}.attention-heading{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:11px}.attention-heading strong{letter-spacing:.6px}.attention-heading small{color:#9fbfbb}.tokens{min-height:53px;margin-top:13px;display:flex;gap:9px;align-items:center;flex-wrap:wrap}.placeholder{font-size:11px;color:#89a5a8}.token{flex:1;min-width:64px;border:1px solid #46665f;border-radius:8px;padding:9px;text-align:center;background:#2d4c42}.token b{display:block;font-size:12px}.token small{font-size:10px;display:block;color:#b6ebd4;margin-top:6px}.attention-footer{display:flex;justify-content:space-between;gap:12px;color:#86a3a7;margin-top:10px;font-size:10px}
+.fly-row{display:flex;align-items:center;gap:11px}.fly-avatar{width:44px;height:44px;display:grid;place-items:center;font-size:23px;border-radius:12px;background:#2c4d40}.fly-name{font-size:13px;font-weight:850}.fly-state{font-size:10px;color:#9db4b4;margin-top:5px}
+.answer{border:1px solid #3e6c59;border-radius:12px;background:linear-gradient(135deg,#23443a,#1c3036);padding:15px;margin-top:19px;min-height:132px}.answer-title{font-size:10px;color:#a0d4b5;display:flex;justify-content:space-between}.badge{font-size:9px;color:#b9e7cb;border:1px solid #507966;border-radius:4px;padding:2px 6px}.answer-word{font-size:22px;font-weight:900;margin-top:17px}.answer-hint{font-size:10px;color:#b5d1c4;line-height:1.65;margin-top:7px}
+.prob-placeholder{border:1px dashed #455b63;border-radius:8px;padding:25px 10px;text-align:center;color:#91aab2;font-size:11px}.prob-row{margin-bottom:12px}.prob-meta{display:flex;justify-content:space-between;font-size:11px;font-weight:760;margin-bottom:6px}.prob-meta span:last-child{color:#a2dbbc}.track{height:7px;background:#2a4650;border-radius:8px;overflow:hidden}.fill{height:100%;background:#76e6ae;border-radius:8px;transition:width .3s}.prob-note{color:#89a3a7;font-size:10px;line-height:1.6}
+.trainers{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.trainers button{padding:11px 1px;background:#28483d;border:1px solid #4f7861;color:#b9ebc9;border-radius:8px;font-size:10px;font-weight:750}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.stat{background:#22343d;border:1px solid #39545c;border-radius:8px;padding:12px}.stat small{display:block;color:#a0b2b7;font-size:10px}.stat b{display:block;font-size:20px;margin-top:5px}
+.chart{background:#1d3035;border:1px solid #3b5056;border-radius:9px;margin-top:11px;padding:9px}.chart svg{width:100%;height:53px}.chart-footer{display:flex;justify-content:space-between;font-size:9px;color:#8da5a7}
+.info{margin-top:17px;border-left:3px solid #92e2b8;background:#20393a;padding:13px;border-radius:3px 9px 9px 3px}.info b{font-size:9px;letter-spacing:1px;color:#a4eec0}.info p{font-size:11px;line-height:1.8;color:#d0e3d9}.info small{font-size:9px;color:#8dacaa}
+footer{height:38px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #31434c;padding:0 27px;font-size:10px;color:#8ca4a9}
+@media(max-width:1150px){main{grid-template-columns:245px minmax(340px,1fr)}aside.right{grid-column:1/-1;border-top:1px solid #31434c;border-left:none;display:block}aside.right .trainers{max-width:500px}.scene-wrap{height:560px}}
+@media(max-width:680px){header{padding:0 15px}.header-right{font-size:0}main{display:block}aside.left{border-right:0;border-bottom:1px solid #31434c}.center{padding:16px 11px}.scene-wrap{height:430px}.bubble{top:26%;right:10%;font-size:10px}.stage-heading small{display:none}footer{padding:0 12px}footer span:last-child{display:none}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head><body>
+<header><div class="logo"><div class="logo-icon">✦</div><div><strong>FLYFORMER <em>LAB</em></strong><small>THE TRANSFORMER CLASSROOM</small></div></div><div class="header-right"><span class="dot"></span>LIVE 3D SIMULATION&nbsp; · &nbsp; v1.0</div></header>
+<main>
+<aside class="left">
+<div class="eyebrow">01 / EXPERIMENT</div><h1>초파리에게<br><em>언어를 가르치다.</em></h1><p class="lead">학교 교실 칠판에 문제를 내고, 책상에 앉은 초파리가 문맥을 읽는 과정을 관찰하세요.</p>
+<div class="section">학습 방식 <span>MODEL MODE</span></div>
+<div class="modes"><button id="gpt" class="mode active"><span class="symbol">↗</span><b>GPT</b><small>다음 단어 예측</small></button><button id="bert" class="mode"><span class="symbol">↔</span><b>BERT</b><small>빈칸 단어 복원</small></button></div>
+<div class="section">칠판 문제 <span>QUESTION</span></div><div class="question-card"><div class="question-id" id="qid">QUESTION 01 / 12</div><div class="question-preview" id="qpreview">오늘 급식은 정말 ____</div><div class="tag" id="qtag">앞 문맥을 보고 예측</div></div><button class="btn full" id="next">↻ &nbsp;다른 문제 출제</button>
+<div class="section">직접 문제 내기 <span>OPTIONAL</span></div><label class="field" for="custom">문장 입력</label><input id="custom" maxlength="100" placeholder="예: 내일 날씨는 정말"><p class="field-help" id="input-help">GPT는 문장 뒤에 나올 단어를 예측해요.</p>
+<div class="actions"><button id="custom-btn" class="btn">칠판에 쓰기</button><button id="clear" class="link">예시로 돌아가기</button></div>
+<div class="fine-print">ⓘ <b>교육용 소형 어텐션 모델입니다.</b> 실제 GPT·BERT 전체를 구현한 것이 아니며, 고정 Q/K/V와 학습 가능한 출력층을 이용해 원리를 체험합니다.</div>
+</aside>
+<div class="center">
+<div class="stage-heading"><div><div class="eyebrow">VIRTUAL CLASSROOM / ROOM 302</div><h2>3D AI 교실 <span class="room-chip">교실 302호</span></h2></div><small>드래그: 카메라 회전 · 휠: 확대</small></div>
+<div class="scene-wrap"><div id="scene"></div><div class="chip"><span class="dot"></span>LIVE CLASSROOM &nbsp; ● &nbsp; 3 PUPILS</div><button id="camera-reset" class="camera">⌖ 기본 시점</button><div class="bubble" id="bubble">선생님, 문제 주세요!</div>
+<div class="overlay"><div class="overlay-line"><span>CHALKBOARD QUESTION</span><span id="mode-label">GPT · CAUSAL</span></div><div class="board-question" id="board-text"></div></div></div>
+<div class="attention"><div class="attention-heading"><strong>▏ SELF-ATTENTION</strong><small id="attn-mode">앞에 나온 단어만 참고</small></div><div class="tokens" id="tokens"><span class="placeholder">문제를 풀면 각 단어를 얼마나 참고했는지 표시됩니다.</span></div><div class="attention-footer"><span>진한 색 = 높은 어텐션 가중치</span><span>Q × K → Softmax → V</span></div></div>
+</div>
+<aside class="right"><div class="section" style="margin-top:0">초파리의 풀이 <span>INFERENCE</span></div>
+<div class="fly-row"><div class="fly-avatar">🪰</div><div><div class="fly-name">초파리 No. 01</div><div class="fly-state" id="state">대기 중 · 준비 완료</div></div></div>
+<div class="answer"><div class="answer-title"><span>선택한 답</span><span class="badge" id="badge">READY</span></div><div id="answer" class="answer-word">아직 답하지 않았어요</div><div id="explain" class="answer-hint">예측 버튼을 눌러 주세요.</div></div><button id="predict" class="btn full primary">▶ &nbsp;초파리, 문제 풀어!</button>
+<div class="section">후보 단어 확률 <span>SOFTMAX</span></div><div id="probs"><div class="prob-placeholder">예측하면 실제 확률을 보여 드려요.</div></div><p class="prob-note">비율은 제시한 세 후보 안에서 정규화한 모델 출력입니다.</p>
+<div class="section">초파리 학습 <span>TRAINING</span></div><div class="trainers"><button data-train="1">+1회</button><button data-train="10">+10회</button><button data-train="100">+100회</button><button data-train="1000">+1000회</button></div>
+<div class="stats"><div class="stat"><small>학습 스텝</small><b id="steps">0</b></div><div class="stat"><small>학습 세트 정확도</small><b id="accuracy">—</b></div></div>
+<div class="chart"><svg viewBox="0 0 260 66" preserveAspectRatio="none"><path d="M0 59 H260" stroke="#416258" stroke-dasharray="3 4" fill="none"/><polyline id="chart-line" fill="none" stroke="#88edbc" stroke-width="2.5" points=""/></svg><div class="chart-footer"><span>정확도 변화</span><span id="chart-label">학습 전</span></div></div>
+<button class="link" id="reset" style="margin-top:11px">↺ 모델 초기화</button>
+<div class="info"><b>WHY THIS MATTERS</b><p id="mode-explain">GPT는 다음 단어를 예측할 때 이전 토큰만 볼 수 있습니다. 초파리는 이를 간단한 어텐션 모형으로 연습합니다.</p><small>브라우저 내 실제 계산 · 학습용 장난감 모델</small></div>
+</aside></main><footer><span>FLYFORMER LAB · LANGUAGE IS MATHEMATICS</span><span>THREE.JS · TRAINABLE CLASSIFIER · 3D CLASSROOM</span></footer>
+<script type="module">
+import * as T from 'https://esm.sh/three@0.180.0';
+const el=id=>document.getElementById(id);
+const sets={
+gpt:[
+['오늘 급식은 정말','맛있다',['맛있다','졸리다','어렵다']],
+['친구와 먹은 점심은','맛있다',['재미있다','맛있다','조용하다']],
+['친구들이랑 한 게임은','재미있다',['맛있다','재미있다','어렵다']],
+['어제 본 영화는 정말','재미있다',['졸리다','재미있다','화창하다']],
+['구름 한 점 없는 오늘은','화창하다',['화창하다','어렵다','졸리다']],
+['맑은 하늘과 햇살이','화창하다',['맛있다','화창하다','재미있다']],
+['어제 밤을 새웠더니','졸리다',['어렵다','맛있다','졸리다']],
+['잠을 조금밖에 못 자서','졸리다',['졸리다','재미있다','화창하다']],
+['수학 시험 문제가 너무','어렵다',['어렵다','맛있다','재미있다']],
+['복잡한 암호 해독은','어렵다',['화창하다','어렵다','졸리다']],
+['내일 소풍을 간다니','신난다',['졸리다','신난다','맛있다']],
+['경기에서 우승해서 정말','신난다',['어렵다','신난다','재미있다']]],
+bert:[
+['오늘 [MASK] 정말 맛있었다','급식은',['급식은','수학이','날씨는']],
+['점심 [MASK] 아주 맛있었다','급식은',['영화가','급식은','수학이']],
+['어제 [MASK] 너무 어려웠다','수학이',['수학이','급식은','영화가']],
+['오늘 배운 [MASK] 어렵게 느껴졌다','수학이',['날씨는','영화가','수학이']],
+['어제 본 [MASK] 재미있었다','영화가',['영화가','수학이','급식은']],
+['친구와 본 [MASK] 감동적이었다','영화가',['급식은','영화가','날씨는']],
+['아침부터 [MASK] 아주 맑았다','날씨는',['수학이','날씨는','영화가']],
+['구름이 없어 [MASK] 맑았다','날씨는',['날씨는','급식은','수학이']],
+['학생들이 [MASK] 축구를 했다','운동장에서',['운동장에서','급식은','수학이']],
+['축구 시합을 [MASK] 진행했다','운동장에서',['수학이','운동장에서','영화가']],
+['나는 [MASK] 책을 읽었다','도서관에서',['도서관에서','운동장에서','급식은']],
+['시험 공부를 [MASK] 하였다','도서관에서',['영화가','급식은','도서관에서']]]};
+function seed(s){let h=2166136261;for(let i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),16777619);return h>>>0}
+function random(n){return()=>{n=(n+0x6d2b79f5)|0;let t=n;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return ((t^t>>>14)>>>0)/4294967296}}
+const dim=12,rand=random(55),proj=Array.from({length:3},()=>Array.from({length:dim},()=>Array.from({length:dim},()=>(rand()-.5)*.55))),emb={};
+function vec(word){if(emb[word])return emb[word];let r=random(seed(word));return emb[word]=Array.from({length:dim},()=>r()*2-1)}
+function dot(a,b){let n=0;for(let j=0;j<a.length;j++)n+=a[j]*b[j];return n}
+function mul(matrix,v){return matrix.map(row=>dot(row,v))}
+function sm(a){let mx=Math.max(...a),e=a.map(x=>Math.exp(x-mx)),s=e.reduce((v,x)=>v+x,0);return e.map(x=>x/s)}
+function extract(sentence,mode){let words=sentence.trim().split(/\s+/).filter(Boolean).slice(0,20),target=mode==='gpt'?words.length:words.indexOf('[MASK]');if(target<0)target=0;
+ let all=words.slice();if(mode==='gpt')all.push('[NEXT]');let q=mul(proj[0],vec(all[target]));let names=[],scores=[],vals=[],base=[];
+ for(let i=0;i<all.length;i++){if(i===target)continue;if(mode==='gpt'&&i>target)continue;
+ let input=vec(all[i]).map((x,d)=>x+.07*Math.sin((i+1)/(10000**(2*d/dim))));names.push(all[i]);scores.push(dot(q,mul(proj[1],input))/Math.sqrt(dim));vals.push(mul(proj[2],input));base.push(input)}
+ let weights=sm(scores),f=new Float64Array(dim*2);
+ for(let i=0;i<names.length;i++)for(let d=0;d<dim;d++){f[d]+=weights[i]*vals[i][d];f[d+dim]+=base[i][d]/Math.max(1,names.length)}
+ return {f,attention:names.map((word,i)=>({word,weight:weights[i]}))}}
+class Student{
+ constructor(mode){this.mode=mode;this.n=0;this.w={};this.b={};this.r=random(mode==='gpt'?103:309);this.history=[]}
+ ensure(word){if(!this.w[word]){this.w[word]=Float64Array.from({length:dim*2},()=> (this.r()-.5)*.04);this.b[word]=0}return this.w[word]}
+ calc(p){let feat=extract(p[0],this.mode),scores=p[2].map(word=>dot(this.ensure(word),feat.f)+this.b[word]),prob=sm(scores),rank=p[2].map((word,i)=>({word,p:prob[i]})).sort((a,b)=>b.p-a.p);return {...feat,rank,winner:rank[0].word}}
+ accuracy(){let questions=sets[this.mode];return questions.filter(p=>this.calc(p).winner===p[1]).length/questions.length}
+ train(n){const q=sets[this.mode];for(let i=0;i<n;i++){let p=q[Math.floor(this.r()*q.length)],f=extract(p[0],this.mode).f,score=p[2].map(w=>dot(this.ensure(w),f)+this.b[w]),prob=sm(score),lr=.14/(1+this.n/2000);
+ p[2].forEach((word,j)=>{let g=lr*(prob[j]-(word===p[1]?1:0)),w=this.ensure(word);for(let k=0;k<w.length;k++)w[k]-=g*f[k];this.b[word]-=g});this.n++;
+ if(i===n-1||i%Math.max(1,Math.floor(n/15))===0)this.history.push(this.accuracy())}
+ this.history=this.history.slice(-65)}}
+let mode='gpt',idx=0,own=null,playing=false,mood=0;const models={gpt:new Student('gpt'),bert:new Student('bert')};
+function pnow(){return own||sets[mode][idx]}
+function sentence(p){return mode==='gpt'?p[0]+' ____':p[0].replace('[MASK]','_____')}
+function sync(){let p=pnow();el('qid').textContent=own?'USER QUESTION':'QUESTION '+String(idx+1).padStart(2,'0')+' / '+sets[mode].length;el('qpreview').textContent=sentence(p);el('board-text').textContent=sentence(p);el('qtag').textContent=mode==='gpt'?'앞 문맥을 보고 예측':'가려진 단어 복원';el('mode-label').textContent=mode==='gpt'?'GPT · CAUSAL':'BERT · BIDIRECTIONAL';el('attn-mode').textContent=mode==='gpt'?'이전 토큰만 참고':'앞뒤 토큰을 함께 참고';el('state').textContent='대기 중 · 준비 완료';el('badge').textContent='READY';el('answer').textContent='아직 답하지 않았어요';el('explain').textContent='예측 버튼을 눌러 주세요.';el('probs').innerHTML='<div class="prob-placeholder">예측하면 실제 확률을 보여 드려요.</div>';el('tokens').innerHTML='<span class="placeholder">문제를 풀면 각 단어를 얼마나 참고했는지 표시됩니다.</span>';el('bubble').textContent='선생님, 문제 주세요!';paintBoard(p);stats()}
+function stats(){const m=models[mode];el('steps').textContent=m.n.toLocaleString('ko-KR');el('accuracy').textContent=Math.round(m.accuracy()*100)+'%';const h=m.history;el('chart-line').setAttribute('points',h.map((v,i)=>(h.length===1?0:i*260/(h.length-1)).toFixed(2)+','+(59-v*54).toFixed(2)).join(' '));el('chart-label').textContent=m.n+'회 학습'}
+function switchMode(m){if(playing)return;mode=m;idx=0;own=null;el('gpt').classList.toggle('active',m==='gpt');el('bert').classList.toggle('active',m==='bert');el('input-help').textContent=m==='gpt'?'GPT는 문장 뒤에 나올 단어를 예측해요.':'BERT는 문장 안에 [MASK]를 포함해 주세요.';el('mode-explain').textContent=m==='gpt'?'GPT는 앞의 문맥만 참조해 다음 단어를 예측합니다. 입력 뒤쪽의 토큰은 참조할 수 없습니다.':'BERT는 [MASK]의 앞뒤 문맥을 동시에 참조합니다. 초파리가 주목한 가중치는 실제 어텐션 수치입니다.';el('custom').value='';sync()}
+function display(out){el('tokens').innerHTML='';out.attention.forEach(t=>{let node=document.createElement('div');node.className='token';node.style.background='rgba(76,194,135,'+(.14+t.weight*.58)+')';let name=document.createElement('b');name.textContent=t.word;let per=document.createElement('small');per.textContent=(t.weight*100).toFixed(1)+'%';node.append(name,per);el('tokens').append(node)});el('probs').innerHTML='';out.rank.forEach(row=>{let div=document.createElement('div');div.className='prob-row';let m=document.createElement('div');m.className='prob-meta';let n=document.createElement('span');n.textContent=row.word;let v=document.createElement('span');v.textContent=(row.p*100).toFixed(1)+'%';m.append(n,v);let track=document.createElement('div');track.className='track';let f=document.createElement('div');f.className='fill';f.style.width=(row.p*100)+'%';track.appendChild(f);div.append(m,track);el('probs').append(div)})}
+function solve(){if(playing)return;playing=true;el('predict').disabled=true;el('state').textContent='Q / K / V 계산 중…';el('bubble').textContent='어텐션 계산 중…';mood=1;setTimeout(()=>{let p=pnow(),r=models[mode].calc(p),right=p[1]===null?null:r.winner===p[1];el('answer').textContent=r.winner;el('badge').textContent=right===null?'PREDICTED':right?'CORRECT':'TRY AGAIN';el('explain').textContent=right===null?'직접 입력: 정답 레이블이 없어서 채점하지 않습니다.':right?'정 확 한 입니다! 정답을 골랐어요.':'오차범위 지로? 정답: '+p[1];el('bubble').textContent=right===null?'제 예측은 '+r.winner+'!':right?'정 확 한 입니다!':'다시 공부할게요!';el('state').textContent='예측 완료';mood=right===false?3:2;display(r);el('predict').disabled=false;playing=false;setTimeout(()=>mood=0,1500)},520)}
+el('gpt').onclick=()=>switchMode('gpt');el('bert').onclick=()=>switchMode('bert');el('next').onclick=()=>{own=null;idx=(idx+1)%sets[mode].length;sync()};el('predict').onclick=solve;
+el('custom-btn').onclick=()=>{let s=el('custom').value.trim();if(!s)return;if(mode==='bert'&&!s.includes('[MASK]')){alert('BERT 모드에서는 [MASK]를 포함해야 합니다.');return}own=[s,null,mode==='gpt'?['맛있다','재미있다','어렵다']:['급식은','수학이','날씨는']];sync()};
+el('custom').onkeydown=e=>{if(e.key==='Enter')el('custom-btn').click()};el('clear').onclick=()=>{own=null;el('custom').value='';sync()};el('reset').onclick=()=>{models[mode]=new Student(mode);sync()};
+document.querySelectorAll('[data-train]').forEach(b=>b.onclick=()=>{if(playing)return;let n=Number(b.dataset.train);models[mode].train(n);stats();el('state').textContent=n+'회 경사하강 학습 완료';el('bubble').textContent='학습 '+n.toLocaleString()+'회 완료!'});
+// 3D SCHOOL ENVIRONMENT
+const root=el('scene'),scene=new T.Scene();scene.background=new T.Color('#c6d6c9');scene.fog=new T.Fog('#c6d6c9',16,33);
+const camera=new T.PerspectiveCamera(48,1,.1,100),renderer=new T.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.outputColorSpace=T.SRGBColorSpace;renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.45;root.appendChild(renderer.domElement);
+scene.add(new T.HemisphereLight(0xffffff,0x728477,2.5));let sun=new T.DirectionalLight(0xfff3dd,3.1);sun.position.set(-4,9,8);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-12;sun.shadow.camera.right=12;sun.shadow.camera.top=12;sun.shadow.camera.bottom=-12;scene.add(sun);
+const material=(color,metalness=0)=>new T.MeshStandardMaterial({color,metalness,roughness:.8}),wall=material('#ecede0'),wood=material('#c38b5e'),leg=material('#7f9294',.35),dark=material('#314c44'),floor=material('#bca28a');
+function cube(parent,w,h,d,x,y,z,mat){let o=new T.Mesh(new T.BoxGeometry(w,h,d),mat);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o}
+function orb(parent,w,h,d,x,y,z,mat){let o=new T.Mesh(new T.SphereGeometry(1,16,12),mat);o.scale.set(w,h,d);o.position.set(x,y,z);o.castShadow=true;parent.add(o);return o}
+function rod(parent,a,b,r,mat){let v=new T.Vector3(...a),u=new T.Vector3(...b),diff=u.clone().sub(v),o=new T.Mesh(new T.CylinderGeometry(r,r,diff.length(),7),mat);o.position.copy(v.add(u).multiplyScalar(.5));o.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),diff.normalize());o.castShadow=true;parent.add(o);return o}
+cube(scene,15,.24,17,0,-.14,-1,floor);cube(scene,15,8,.18,0,4,-7.5,wall);cube(scene,.18,8,17,-7,4,-1,wall);cube(scene,.18,8,17,7,4,-1,wall);
+for(let i=0;i<16;i++)cube(scene,.014,.02,16.8,-6.5+i*.85,-.005,-1,material(i%2?'#bb9a7c':'#ceb096'));
+const glass=new T.MeshBasicMaterial({color:'#b6ddec',side:T.DoubleSide});for(const z of [-3.5,2.6]){let p=new T.Mesh(new T.PlaneGeometry(3.4,2.7),glass);p.rotation.y=Math.PI/2;p.position.set(-6.9,4.2,z);scene.add(p);cube(scene,.14,.12,3.5,-6.81,4.2,z,material('#fff9e8'));cube(scene,.14,2.8,.13,-6.81,4.2,z,material('#fff9e8'))}
+for(let z of [-2.5,2.2]){cube(scene,2.5,.09,.9,0,7.3,z,material('#fef6e2'));let light=new T.PointLight(0xfff5e6,35,8);light.position.set(0,6.8,z);scene.add(light)}
+cube(scene,9.9,3.2,.2,0,4,-7.2,wood);cube(scene,9.6,2.92,.07,0,4,-7.05,dark);cube(scene,9.8,.12,.38,0,2.43,-6.95,wood);
+const canvas=document.createElement('canvas');canvas.width=1536;canvas.height=480;const ctx=canvas.getContext('2d'),tex=new T.CanvasTexture(canvas);tex.colorSpace=T.SRGBColorSpace;const sign=new T.Mesh(new T.PlaneGeometry(9.5,2.84),new T.MeshBasicMaterial({map:tex}));sign.position.set(0,4,-6.99);scene.add(sign);
+function paintBoard(p){ctx.fillStyle='#245e51';ctx.fillRect(0,0,1536,480);for(let i=0;i<120;i++){ctx.fillStyle='rgba(255,255,240,.026)';ctx.fillRect(i*131%1536,i*89%480,25,2)}ctx.fillStyle='#d7e6c6';ctx.font='bold 31px sans-serif';ctx.fillText('FLYFORMER  /  AI CLASSROOM',65,59);ctx.font='bold 27px sans-serif';ctx.fillStyle='#b5f1ce';ctx.fillText(mode==='gpt'?'01 · NEXT TOKEN PREDICTION':'02 · MASKED WORD PREDICTION',65,123);ctx.strokeStyle='#d8efdb80';ctx.beginPath();ctx.moveTo(65,142);ctx.lineTo(1474,142);ctx.stroke();let s=sentence(p),size=s.length>36?64:s.length>25?75:97;ctx.font='bold '+size+'px "Noto Sans KR",sans-serif';ctx.fillStyle='#fffcef';let words=s.split(/\s+/),line='',y=270;for(const word of words){if(ctx.measureText(line+' '+word).width>1400&&line){ctx.fillText(line,65,y);line=word;y+=size*1.25}else line+=(line?' ':'')+word}ctx.fillText(line,65,y);ctx.font='24px sans-serif';ctx.fillStyle='#b7dfc2';ctx.fillText('Q / K / V   →   SOFTMAX   →   ATTENTION',65,440);tex.needsUpdate=true}
+function desk(x,z){cube(scene,1.85,.13,1,x,1.12,z,wood);cube(scene,1.75,.52,.1,x,.83,z-.39,wood);for(let xx of [-.75,.75])for(let zz of [-.35,.35])rod(scene,[x+xx,.98,z+zz],[x+xx,.05,z+zz],.042,leg);cube(scene,1.3,.12,.52,x,.56,z+.93,wood);cube(scene,1.4,.93,.12,x,1.08,z+1.16,wood);for(let xx of [-.53,.53])rod(scene,[x+xx,.5,z+.93],[x+xx,.05,z+.93],.04,leg)}
+const wingsMat=new T.MeshStandardMaterial({color:'#eafff1',transparent:true,opacity:.64,side:T.DoubleSide,depthWrite:false,roughness:.35}),eyes=material('#253b33'),flies=[];
+function fly(x,z,n){desk(x,z);let group=new T.Group();group.position.set(x,0,z+.46);scene.add(group);let body=new T.Group();group.add(body);orb(body,.36,.42,.31,0,1.44,0,material('#a6c971'));orb(body,.5,.45,.44,0,1.94,-.05,material(['#b7d879','#c9bb6d','#88bcb3'][n]));for(let sx of [-1,1]){orb(body,.16,.18,.09,sx*.21,2.03,.31,eyes);orb(body,.052,.055,.03,sx*.21+.04,2.1,.39,material('#e9fff4'));rod(body,[sx*.2,2.28,-.05],[sx*.33,2.52,-.04],.027,eyes);orb(body,.056,.06,.056,sx*.33,2.53,-.04,eyes);rod(body,[sx*.27,1.43,.02],[sx*.48,1.28,.27],.04,eyes)}let mouth=new T.Mesh(new T.TorusGeometry(.11,.018,5,16,Math.PI),eyes);mouth.rotation.z=Math.PI;mouth.position.set(0,1.82,.36);body.add(mouth);let wings=[];for(let sx of [-1,1]){let w=orb(body,.32,.057,.24,sx*.47,1.72,-.35,wingsMat);w.rotation.z=sx*.5;wings.push(w)}flies.push({body,wings,n})}
+fly(-2.5,-.7,0);fly(0,-.9,1);fly(2.5,-.75,2);
+cube(scene,2.1,1.02,.65,5.4,1.35,-5.7,wood);cube(scene,2.3,.11,.83,5.4,1.9,-5.7,wood);
+let paper=material('#f8f1d6');cube(scene,.72,.018,.42,-2.5,1.2,-1.19,paper);cube(scene,.72,.018,.42,0,1.2,-1.39,paper);
+const target=new T.Vector3(0,2.05,-2.2);let theta=.51,phi=1.21,radius=12.3;
+function cameraPlace(){let p=new T.Spherical(radius,phi,theta);camera.position.set(target.x+p.radius*Math.sin(p.phi)*Math.sin(p.theta),target.y+p.radius*Math.cos(p.phi),target.z+p.radius*Math.sin(p.phi)*Math.cos(p.theta));camera.lookAt(target)}cameraPlace();
+let down=false,prevX=0,prevY=0;renderer.domElement.addEventListener('pointerdown',e=>{down=true;prevX=e.clientX;prevY=e.clientY;renderer.domElement.setPointerCapture(e.pointerId)});renderer.domElement.addEventListener('pointerup',()=>down=false);renderer.domElement.addEventListener('pointercancel',()=>down=false);renderer.domElement.addEventListener('pointermove',e=>{if(!down)return;theta-=(e.clientX-prevX)*.005;phi=T.MathUtils.clamp(phi+(e.clientY-prevY)*.005,.63,1.49);prevX=e.clientX;prevY=e.clientY;cameraPlace()});renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();radius=T.MathUtils.clamp(radius+e.deltaY*.01,7.3,17.5);cameraPlace()},{passive:false});el('camera-reset').onclick=()=>{theta=.51;phi=1.21;radius=12.3;cameraPlace()};
+function resize(){let w=root.clientWidth,h=root.clientHeight;if(w>0&&h>0){renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}}new ResizeObserver(resize).observe(root);resize();
+const clock=new T.Clock();function frame(){let t=clock.getElapsedTime();flies.forEach(o=>{o.body.position.y=Math.sin(t*1.9+o.n)*.026+(o.n===0&&mood===2?.13*Math.abs(Math.sin(t*7)):0);o.body.rotation.y=Math.sin(t*1.2+o.n)*.06;o.body.rotation.z=o.n===0&&mood===3?.14*Math.sin(t*7):0;o.wings.forEach((w,i)=>w.rotation.z=(i===0?-1:1)*(.48+.14*Math.sin(t*12+o.n)))});renderer.render(scene,camera);requestAnimationFrame(frame)}frame();sync();
+</script></body></html>
